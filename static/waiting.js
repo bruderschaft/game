@@ -14,14 +14,14 @@ var message = document.getElementById("message");
 
 	function call (outputElement) {
 		var xhr = new XMLHttpRequest();
-		xhr.open('GET', 'http://10.42.0.1:8078/message', 'true');
+		xhr.open('GET', 'http://192.168.0.105:8078/message', 'true');
 		xhr.addEventListener("load", load, false);
 			function load (event) {
 				var responseText = event.target.responseText;
 				outputElement.innerHTML = responseText;
 				if (responseText.indexOf("userId") == 0) {	//пришел Id, все ОК
 					clearTimeout(window.timer);
-					setTimeout("document.location.href = 'http://10.42.0.1:8078/greeting';", 2000);
+					setTimeout("document.location.href = 'http://192.168.0.105:8078/greeting';", 2000);
 					
 				} else if (responseText.indexOf("Неправильный") == 0) { //TODO: смотреть по коду ошибки
 					clearTimeout(window.timer);
@@ -29,7 +29,7 @@ var message = document.getElementById("message");
 					message.style.background = 'rgba(245, 11, 0, 0.7)';
 					button_stop.childNodes[1].innerHTML = "На главную";
 					button_stop.childNodes[1].style.textDecoration = "underline";
-					button_stop.childNodes[1].href = "http://10.42.0.1:8078/index";
+					button_stop.childNodes[1].href = "http://192.168.0.105:8078/index";
 				};
 			}
 		xhr.send(null);

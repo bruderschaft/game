@@ -28,11 +28,12 @@ public class Plane {
 		//this.damage = damage;
 		this.left = left;
 		if (left){
-			position = new Position(0.0, 0.0);
+			position = new Position(250.0, 48.0);
 		} else {
-			position = new Position(960.0, 0.0);
+			position = new Position(850.0, 50.0);
 		}
 		direction = new Direction(0.0, 0.0);
+		rotation = 13;
 	}
 
 	public void move(){

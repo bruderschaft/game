@@ -67,7 +67,7 @@ public class FrontendImpl extends WebSocketServlet implements Runnable, Abonent,
 						if ((!userIdToSocket.isEmpty()) && (userIdToSocket.get(userId)!=null) && (gameSessionIdToReplica.get(userSession.getGameSessionId()).isChanged())){
 							SocketConnect socket = userIdToSocket.get(userId);
 							String message = gameSessionIdToReplica.get(userSession.getGameSessionId()).getJSON();
-							socket.sendMessage(message);
+ 							socket.sendMessage(message);
 						}
 					}
 				}
@@ -320,15 +320,40 @@ public class FrontendImpl extends WebSocketServlet implements Runnable, Abonent,
 				Writter.print(response, gameSessionIdToReplica.get(userSession.getGameSessionId()).getJSON());
 			} else	if (requestURI.equals("/index")){
 				if(userSession == null)  {
-
-					data.put("sessionId", sessionId);
-					response.setContentType("text/html;charset=utf-8");
-					Writter.print(response, PageGenerator.getPage("index1.html", data));
+					Cookie cookies[] = request.getCookies();
+					Long userIdCookie = null;
+					if (cookies != null){
+						for (int i = 0; i < cookies.length; i++){
+							if (cookies[i].getName().equals("id")){
+								userIdCookie = Long.parseLong(cookies[i].getValue());
+								this.addNewUserSession(request.getSession().getId(), "old");//TODO: пофиксить и запросить юзернейм
+								setId(request.getSession().getId(), userIdCookie);
+								response.sendRedirect("/greeting");
+							}
+						}
+					}
+					if (userIdCookie == null){
+						data.put("sessionId", sessionId);
+						response.setContentType("text/html;charset=utf-8");
+						Writter.print(response, PageGenerator.getPage("index1.html", data));
+					}
 
 				} else if (userSession.getUserId() == -1L){
-					data.put("sessionId", sessionId);
-					response.setContentType("text/html;charset=utf-8");
-					Writter.print(response, PageGenerator.getPage("index1.html", data));
+					Cookie cookies[] = request.getCookies();
+					Long userIdCookie = null;
+					for (int i = 0; i < cookies.length; i++){
+						if (cookies[i].getName().equals("id")){
+							userIdCookie = Long.parseLong(cookies[i].getValue());
+							this.addNewUserSession(request.getSession().getId(), "old");//TODO: пофиксить и запросить юзернейм
+							setId(request.getSession().getId(), userIdCookie);
+							response.sendRedirect("/greeting");
+						}
+					}
+					if (userIdCookie == null){
+						data.put("sessionId", sessionId);
+						response.setContentType("text/html;charset=utf-8");
+						Writter.print(response, PageGenerator.getPage("index1.html", data));
+					}
 				}  else	{
 						response.sendRedirect("/greeting");
 				}
@@ -342,6 +367,12 @@ public class FrontendImpl extends WebSocketServlet implements Runnable, Abonent,
 		UserSession userSession = new UserSession(requestSessionId, requestUsername, ms.getAddresService());
 		sessionIdToUserSession.put(requestSessionId, userSession);
 	}
+
+	private void addNewUserSession(String requestSessionId, String requestUsername){
+		UserSession userSession = new UserSession(requestSessionId, requestUsername, ms.getAddresService());
+		sessionIdToUserSession.put(requestSessionId, userSession);
+	}
+
 
     public void doPost(HttpServletRequest request, HttpServletResponse response){
 		String requestURI = request.getRequestURI();

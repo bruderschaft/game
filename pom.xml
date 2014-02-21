@@ -12,7 +12,7 @@
         <dependency>
             <groupId> org.eclipse.jetty</groupId>
             <artifactId>jetty-server</artifactId>
-            <version>9.0.5.v20130815</version>
+            <version>9.1.0.M0</version>
         </dependency>
         <dependency>
             <groupId>org.freemarker</groupId>
@@ -22,7 +22,7 @@
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-webapp</artifactId>
-            <version>9.0.5.v20130815</version>
+            <version>9.1.0.M0</version>
         </dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
@@ -57,7 +57,7 @@
 		<dependency>
 			<groupId>org.eclipse.jetty.websocket</groupId>
 			<artifactId>javax-websocket-server-impl</artifactId>
-			<version>9.1.0.v20131115</version>
+			<version>9.1.0.M0</version>
 		</dependency>
 		<dependency>
 			<groupId>mysql</groupId>

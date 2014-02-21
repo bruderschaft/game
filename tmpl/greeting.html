@@ -28,7 +28,91 @@
 	<script type="text/javascript" src="/easeljs/ui/Touch.js"></script>
 	<script type="text/javascript" src="/easeljs/utils/SpriteSheetUtils.js"></script>
 	<script type="text/javascript" src="/easeljs/utils/SpriteSheetBuilder.js"></script>
-	<script type="text/javascript">
+	<style type="text/css">
+		.utils{
+			display: inline-block;
+			vertical-align: top;
+		}
+		button{
+			font-family: inherit;
+			font-size: inherit;
+		}
+		.utils__item{
+			margin-bottom: 7px;
+			margin-top: 7px;
+		}
+		.utils__item_link{
+			font-size: 18px;
+			font-family: Verdana;
+			padding: inherit;
+			text-align: center;
+		}
+		.utils__item_button{
+			padding: 2px;
+			font-size: 16px;
+		}
+	</style>
+</head>
+<body onload="init();">
+	<canvas id="testCanvas" width="1100" height="600" style="display:inline-block">
+        Your browser doesn't support canvas. Please download IE9+ on <a href="http://ie.microsoft.com/testdrive">IE Test Drive</a>
+    </canvas>
+    <div class="utils">
+    	<div class="utils__item utils__item_link">
+    		<a href="/index">на главную</a>
+    	</div>
+    	<div class="utils__item utils__item_button">
+    		<button id="logout">разлогиниться</button>
+    	</div>
+    </div>
+    <script type="text/javascript">
+    	// возвращает cookie с именем name, если есть, если нет, то undefined
+		function getCookie(name) {
+		  var matches = document.cookie.match(new RegExp(
+		    "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+		  ));
+		  return matches ? decodeURIComponent(matches[1]) : undefined;
+		}
+
+		function setCookie(name, value, options) {
+		  options = options || {};
+		 
+		  var expires = options.expires;
+		 
+		  if (typeof expires == "number" && expires) {
+		    var d = new Date();
+		    d.setTime(d.getTime() + expires*1000);
+		    expires = options.expires = d;
+		  }
+		  if (expires && expires.toUTCString) {
+		    options.expires = expires.toUTCString();
+		  }
+		 
+		  value = encodeURIComponent(value);
+		 
+		  var updatedCookie = name + "=" + value;
+		 
+		  for(var propName in options) {
+		    updatedCookie += "; " + propName;
+		    var propValue = options[propName];   
+		    if (propValue !== true) {
+		      updatedCookie += "=" + propValue;
+		     }
+		  }
+		 
+		  document.cookie = updatedCookie;
+		}
+
+		function deleteCookie(name) {
+		  setCookie(name, "", { expires: -1 })
+		}
+
+    	document.getElementById('logout').addEventListener('click', function () {
+    		deleteCookie('id');
+    	})
+    </script>
+</body>
+<script type="text/javascript">
 		var stage;
 		var planeL, planeR;
 		var canvas;
@@ -59,15 +143,19 @@
 			
 			planeL = new createjs.Bitmap("la-2_left.png");
 			planeR = new createjs.Bitmap("la-2_right.png");
+			background = new createjs.Bitmap("background_medium.png");
 			planeL.x = 150;
 			planeL.y = screen_height - 70;
 			planeR.x = screen_width - 150;
 			planeR.y = screen_height - 70;
+			background.x = 0;
+			background.y = 0;
 			planeL.regX = 78;//image.image.width/2;
 			planeL.regY = 27;//image.image.height/2;
 			planeR.regX = 78;//image.image.width/2;
 			planeR.regY = 27;//image.image.height/2;
 
+			stage.addChild(background);
 			stage.addChild(planeL);
 			stage.addChild(planeR);
 
@@ -91,7 +179,7 @@
 
 
 			//WebSockets
-			var socket = new WebSocket("ws://10.42.0.1:8078/game");
+			var socket = new WebSocket("ws://192.168.0.105:8078/game");
 			socket.onopen = function () {
 			  console.log("Соединение открылось");
 			  // socket.send("{r:5,l:0,u:0,d:0}");
@@ -167,12 +255,4 @@
 		}
 	</script>
 	<script type="text/javascript" src="control_system.js"></script>
-</head>
-<body onload="init();">
-	<canvas id="testCanvas" width="1200" height="600" style="background-color:#607559">
-        Your browser doesn't support canvas. Please download IE9+ on <a href="http://ie.microsoft.com/testdrive">IE Test Drive</a>
-    </canvas>
-    <p id="text">dfdf</p>
-    <a href="/index">на главную</a>
-</body>
 </html>
